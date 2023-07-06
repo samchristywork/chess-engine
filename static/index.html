@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+</head>
+<body>
+  <div style='display:grid; grid-template-columns: 450px 1fr;'>
+  <div class="board">
+    <div class="board" hx-get="/board" hx-trigger="load" hx-swap="outerHTML"></div>
+    <div id="current-turn"></div>
+    <div id="fen"></div>
+  </div>
+  <div style='padding: 1rem;'>
+    <div>
+      <div id="position-values"></div>
+      <div class="move-list" id="move-list" hx-get="/move-list" hx-trigger="load" hx-swap="innerHTML"></div>
+      <button onclick="reset()">Reset</button>
+      <button onclick="flip()">Flip Board</button>
+      <button onclick="computer_move()">Computer Move</button>
+    </div>
+  </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
