@@ -62,3 +62,53 @@ func isValidPawnMove(board *Board, from Square, to Square) bool {
 
   return true;
 }
+
+func isValidRookMove(board *Board, from Square, to Square) bool {
+  piece := board.board[from.Rank][from.File]
+
+  // Is valid destination
+  if isWhite(piece) {
+    if isWhite(board.board[to.Rank][to.File]) {
+      return false
+    }
+  } else {
+    if isBlack(board.board[to.Rank][to.File]) {
+      return false
+    }
+  }
+
+  // Obey rook move rules
+  if from.Rank == to.Rank {
+    if from.File < to.File {
+      for i := from.File + 1; i < to.File; i++ {
+        if board.board[from.Rank][i] != Piece(' ') {
+          return false
+        }
+      }
+    } else {
+      for i := from.File - 1; i > to.File; i-- {
+        if board.board[from.Rank][i] != Piece(' ') {
+          return false
+        }
+      }
+    }
+  } else if from.File == to.File {
+    if from.Rank < to.Rank {
+      for i := from.Rank + 1; i < to.Rank; i++ {
+        if board.board[i][from.File] != Piece(' ') {
+          return false
+        }
+      }
+    } else {
+      for i := from.Rank - 1; i > to.Rank; i-- {
+        if board.board[i][from.File] != Piece(' ') {
+          return false
+        }
+      }
+    }
+  } else {
+    return false
+  }
+
+  return true
+}
