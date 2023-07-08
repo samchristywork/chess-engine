@@ -72,7 +72,7 @@ func makeHTMLBoard(flipped bool, board Board) string {
 
     return html
   } else {
-    counter := 0
+    counter := 1
     html := "<div class='board' style='display:none;' id='white-pov'>"
     html += "<div class='row'>"
     html += "<span class='square'></span>"
