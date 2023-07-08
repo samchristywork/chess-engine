@@ -43,9 +43,29 @@ func moveListHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func computerMoveHandler(w http.ResponseWriter, r *http.Request) {
+  computeMinimaxABPruningMove(&globalBoard)
 }
 
 func movePieceHandler(w http.ResponseWriter, r *http.Request) {
+  from := r.URL.Query().Get("from")
+  to := r.URL.Query().Get("to")
+  fmt.Fprintf(w, "Moving piece from %s to %s\n", from, to)
+  ret := movePiece(&globalBoard, from, to)
+  if ret {
+    fmt.Fprintf(w, "Move successful\n")
+  } else {
+    fmt.Fprintf(w, "Move failed\n")
+  }
+
+  if (globalBoard.activeColor == "b") {
+    if (globalBoard.blackAI != nil) {
+      globalBoard.blackAI(&globalBoard)
+    }
+  } else {
+    if (globalBoard.whiteAI != nil) {
+      globalBoard.whiteAI(&globalBoard)
+    }
+  }
 }
 
 var pieceValueMap = map[rune]int{
@@ -64,5 +84,22 @@ var pieceValueMap = map[rune]int{
 }
 
 func pieceValuesHandler(w http.ResponseWriter, r *http.Request) {
+  sumWhite := 0
+  sumBlack := 0
+
+  for rank := 0; rank < 8; rank++ {
+    for file := 0; file < 8; file++ {
+      piece := globalBoard.board[rank][file]
+      if isWhite(piece) {
+        sumWhite += pieceValueMap[rune(piece)]
+      }
+      if isBlack(piece) {
+        sumBlack += pieceValueMap[rune(piece)]
+      }
+    }
+  }
+
+  fmt.Fprintf(w, "White: %d\n", sumWhite)
+  fmt.Fprintf(w, "Black: %d\n", sumBlack)
 }
 
