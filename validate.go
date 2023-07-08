@@ -112,3 +112,31 @@ func isValidRookMove(board *Board, from Square, to Square) bool {
 
   return true
 }
+
+func isValidKnightMove(board *Board, from Square, to Square) bool {
+  piece := board.board[from.Rank][from.File]
+
+  // Is valid destination
+  if isWhite(piece) {
+    if isWhite(board.board[to.Rank][to.File]) {
+      return false
+    }
+  } else {
+    if isBlack(board.board[to.Rank][to.File]) {
+      return false
+    }
+  }
+
+  // Obey knight move rules
+  if from.Rank == to.Rank+2 || from.Rank == to.Rank-2 {
+    if from.File == to.File+1 || from.File == to.File-1 {
+      return true
+    }
+  } else if from.Rank == to.Rank+1 || from.Rank == to.Rank-1 {
+    if from.File == to.File+2 || from.File == to.File-2 {
+      return true
+    }
+  }
+
+  return false
+}
