@@ -5,6 +5,13 @@ import (
   "strings"
 )
 
+func abs(x int) int {
+  if x < 0 {
+    return -x
+  }
+  return x
+}
+
 func printBoard(board Board) {
   fmt.Println("    a b c d e f g h")
   fmt.Println("   ----------------")
