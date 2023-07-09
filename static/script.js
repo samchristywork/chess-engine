@@ -54,6 +54,23 @@ function pickSquare(file, rank) {
     for (let piece of pickedPieces) {
       piece.classList.add('selected');
     }
+
+    let url=`/valid-moves?from=${file}${rank}`;
+    fetch(url)
+      .then(response => response.text())
+      .then(data => {
+        moves = data.split('\n');
+        for (let square of moves) {
+          if (square == '') {
+            continue;
+          }
+          let squareElements = document.querySelectorAll(`#${square}`);
+          for (let squareElement of squareElements) {
+            squareElement.classList.add('valid');
+          }
+        }
+      });
+
   } else {
     if (file == picked[0] && rank == picked[1]) {
       for (let piece of pickedPieces) {
