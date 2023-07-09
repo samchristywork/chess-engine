@@ -87,12 +87,30 @@ function pickSquare(file, rank) {
 }
 
 function reset() {
+  if (!confirm('Are you sure you want to reset the board?')) {
+    return;
+  }
+
+  let url='/reset';
+  fetch(url)
+    .then(_ => {
+      window.location.href = window.location.href;
+    })
 }
 
 function flip() {
+  let urlParams = new URLSearchParams(window.location.search);
+  let flipped = urlParams.get('flipped');
+  if (flipped == 'true') {
+    window.location.href = "/";
+  } else {
+    window.location.href = "/?flipped=true";
+  }
 }
 
 function computer_move() {
+  let url='/computer-move';
+  fetch(url)
 }
 
 window.onload = function() {
