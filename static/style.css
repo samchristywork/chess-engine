@@ -23,6 +23,74 @@
   background-color: #ffb3b3;
 }
 
+.last-move-to-temp {
+    position: relative;
+}
+
+.last-move-to-temp::before {
+    content: "";
+    position: absolute;
+    top: 75%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #00f;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.last-move-from-temp {
+    position: relative;
+}
+
+.last-move-from-temp::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #6666e6;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.last-move-to {
+    position: relative;
+}
+
+.last-move-to::before {
+    content: "";
+    position: absolute;
+    top: 75%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #00f;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.last-move-from {
+    position: relative;
+}
+
+.last-move-from::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #6666e6;
+    border-radius: 50%;
+    z-index: 1;
+}
+
 .light {
   background-color: #fff;
   font-size: 40px;
