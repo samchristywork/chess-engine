@@ -7,12 +7,22 @@ let origin=null;
 fetch('/piece-values')
   .then(response => response.text())
   .then(data => {
-});
+    document.querySelector('#position-values').innerHTML = data;
+  });
 
 fetch('/fen')
   .then(response => response.text())
   .then(data => {
-});
+    currentFen = data;
+    document.querySelector('#fen').innerHTML = data;
+    let player = null;
+    if (data.split(' ')[1] == 'w') {
+      player = 'White to move.';
+    } else {
+      player = 'Black to move.';
+    }
+    document.querySelector('#current-turn').innerHTML = `<h2>${player}</h2>`;
+  });
 
 function highlight_move(move, highlight=true) {
 }
