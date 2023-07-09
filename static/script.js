@@ -47,6 +47,43 @@ function highlight_move(move, highlight=true) {
 }
 
 function pickSquare(file, rank) {
+  console.log(`Picked ${file}${rank}`);
+  if (pickedPieces == null) {
+    picked = [file, rank];
+    pickedPieces = document.querySelectorAll(`#${file}${rank}`);
+    for (let piece of pickedPieces) {
+      piece.classList.add('selected');
+    }
+  } else {
+    if (file == picked[0] && rank == picked[1]) {
+      for (let piece of pickedPieces) {
+        piece.classList.remove('selected');
+      }
+
+      for (let move of moves) {
+        if (move == '') {
+          continue;
+        }
+        let squareElements = document.querySelectorAll(`#${move}`);
+        for (let squareElement of squareElements) {
+          squareElement.classList.remove('valid');
+        }
+      }
+
+      pickedPieces = null;
+      picked = null;
+      return;
+    } else {
+      let from = `${picked[0]}${picked[1]}`;
+      let to = `${file}${rank}`;
+      console.log(`Moved from ${from} to ${to}`);
+      let url=`/move?from=${from}&to=${to}`;
+      fetch(url)
+        .then(_ => {
+          window.location.href = window.location.href;
+        })
+    }
+  }
 }
 
 function reset() {
