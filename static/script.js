@@ -114,6 +114,39 @@ function computer_move() {
 }
 
 window.onload = function() {
+  let urlParams = new URLSearchParams(window.location.search);
+  let flipped = urlParams.get('flipped');
+  if (flipped == 'true') {
+    document.querySelector('#white-pov').style.display = '';
+  } else {
+    document.querySelector('#black-pov').style.display = '';
+  }
+
+  let moveListItems = document.querySelectorAll('.move-list-item');
+  for (let moveListItem of moveListItems) {
+    moveListItem.addEventListener('mouseenter', function() {
+      let move = moveListItem.innerHTML.split(' ')[1];
+      highlight_move(move);
+    });
+
+    moveListItem.addEventListener('mouseleave', function() {
+      let move = moveListItem.innerHTML.split(' ')[1];
+      highlight_move(move, false);
+    });
+  }
+
+  let squares = document.querySelectorAll('.square');
+  for (let square of squares) {
+    square.addEventListener('mousedown', function(e) {
+      if (e.button == 2) {
+        origin = document.elementFromPoint(e.clientX, e.clientY);
+        return;
+      }
+    });
+    square.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+  }
 }
 
 function createArrow() {
