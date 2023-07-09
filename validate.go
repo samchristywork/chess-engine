@@ -140,3 +140,59 @@ func isValidKnightMove(board *Board, from Square, to Square) bool {
 
   return false
 }
+
+func isValidBishopMove(board *Board, from Square, to Square) bool {
+  piece := board.board[from.Rank][from.File]
+
+  // Is valid destination
+  if isWhite(piece) {
+    if isWhite(board.board[to.Rank][to.File]) {
+      return false
+    }
+  } else {
+    if isBlack(board.board[to.Rank][to.File]) {
+      return false
+    }
+  }
+
+  fileDelta := abs(to.File - from.File)
+  rankDelta := abs(to.Rank - from.Rank)
+
+  if fileDelta != rankDelta {
+    return false
+  }
+
+  // Obey bishop move rules
+  if from.Rank < to.Rank {
+    if from.File < to.File {
+      for i := 1; i < to.Rank-from.Rank; i++ {
+        if board.board[from.Rank+i][from.File+i] != Piece(' ') {
+          return false
+        }
+      }
+    } else {
+      for i := 1; i < to.Rank-from.Rank; i++ {
+        if board.board[from.Rank+i][from.File-i] != Piece(' ') {
+          return false
+        }
+      }
+    }
+  } else {
+    if from.File < to.File {
+      for i := 1; i < from.Rank-to.Rank; i++ {
+        if board.board[from.Rank-i][from.File+i] != Piece(' ') {
+          return false
+        }
+      }
+    } else {
+      for i := 1; i < from.Rank-to.Rank; i++ {
+        if board.board[from.Rank-i][from.File-i] != Piece(' ') {
+          return false
+        }
+      }
+    }
+  }
+
+  return true
+}
+
