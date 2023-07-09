@@ -222,3 +222,37 @@ func isValidKingMove(board *Board, from Square, to Square) bool {
   return true
 }
 
+type ValidationFunc func(*Board, Square, Square) bool
+var pieceValidationMap = map[rune]ValidationFunc{
+  'P': isValidPawnMove,
+  'p': isValidPawnMove,
+  'R': isValidRookMove,
+  'r': isValidRookMove,
+  'N': isValidKnightMove,
+  'n': isValidKnightMove,
+  'B': isValidBishopMove,
+  'b': isValidBishopMove,
+  'Q': isValidQueenMove,
+  'q': isValidQueenMove,
+  'K': isValidKingMove,
+  'k': isValidKingMove,
+}
+
+func isValidMove(board *Board, from Square, to Square) bool {
+  piece := board.board[from.Rank][from.File]
+  if piece == Piece(' ') {
+    return false
+  }
+
+  if from == to {
+    return false
+  }
+
+  if (isWhite(piece) && board.activeColor == "b") || (isBlack(piece) && board.activeColor == "w") {
+    return false
+  }
+
+  pieceRune := rune(piece)
+  f := pieceValidationMap[pieceRune](board, from, to)
+  return f;
+}
