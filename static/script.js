@@ -25,6 +25,25 @@ fetch('/fen')
   });
 
 function highlight_move(move, highlight=true) {
+  let squares = move.split('-');
+  let from = squares[0];
+  let to = squares[1];
+  let fromElements = document.querySelectorAll(`#${from}`);
+  for (let fromElement of fromElements) {
+    if (highlight) {
+      fromElement.classList.add('last-move-from-temp');
+    } else {
+      fromElement.classList.remove('last-move-from-temp');
+    }
+  }
+  let toElements = document.querySelectorAll(`#${to}`);
+  for (let toElement of toElements) {
+    if (highlight) {
+      toElement.classList.add('last-move-to-temp');
+    } else {
+      toElement.classList.remove('last-move-to-temp');
+    }
+  }
 }
 
 function pickSquare(file, rank) {
