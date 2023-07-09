@@ -196,3 +196,29 @@ func isValidBishopMove(board *Board, from Square, to Square) bool {
   return true
 }
 
+func isValidQueenMove(board *Board, from Square, to Square) bool {
+  return isValidBishopMove(board, from, to) || isValidRookMove(board, from, to)
+}
+
+func isValidKingMove(board *Board, from Square, to Square) bool {
+  piece := board.board[from.Rank][from.File]
+
+  // Is valid destination
+  if isWhite(piece) {
+    if isWhite(board.board[to.Rank][to.File]) {
+      return false
+    }
+  } else {
+    if isBlack(board.board[to.Rank][to.File]) {
+      return false
+    }
+  }
+
+  // Obey king move rules
+  if abs(from.Rank-to.Rank) > 1 || abs(from.File-to.File) > 1 {
+    return false
+  }
+
+  return true
+}
+
