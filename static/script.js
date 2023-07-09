@@ -150,14 +150,52 @@ window.onload = function() {
 }
 
 function createArrow() {
+  let arrow = document.createElement('div');
+  arrow.classList.add('arrow');
+  arrow.style.transformOrigin = '0 50%';
+  arrow.style.transform = 'rotate(45deg)';
+  arrow.style.zIndex = '1000';
+  arrow.id = 'arrow';
+  document.body.appendChild(arrow);
+  return arrow;
 }
 
 createArrow();
 
 document.addEventListener('mousemove', function(e) {
+  if (origin == null) {
+    return;
+  }
+
+  let square = document.elementFromPoint(e.clientX, e.clientY);
+  if (square == null) {
+    return;
+  }
+
+  if (square.classList.contains('square')) {
+    // draw arrow
+    let originRect = origin.getBoundingClientRect();
+    let squareRect = square.getBoundingClientRect();
+    let originX = originRect.x + originRect.width / 2;
+    let originY = originRect.y + originRect.height / 2;
+    let squareX = squareRect.x + squareRect.width / 2;
+    let squareY = squareRect.y + squareRect.height / 2;
+    let angle = Math.atan2(squareY - originY, squareX - originX);
+    let distance = Math.sqrt(Math.pow(squareX - originX, 2) + Math.pow(squareY - originY, 2));
+    let arrow = document.querySelector('#arrow');
+    arrow.style.display = '';
+    arrow.style.left = `${originX}px`;
+    arrow.style.top = `${originY}px`;
+    arrow.style.width = `${distance}px`;
+    arrow.style.transform = `rotate(${angle}rad)`;
+  } else {
+    let arrow = document.querySelector('#arrow');
+    arrow.style.display = 'none';
+  }
 });
 
 document.addEventListener('mouseup', function() {
+  origin = null;
 });
 
 setInterval(function() {
