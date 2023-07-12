@@ -153,6 +153,42 @@ func evaluateBoard(board Board) int {
   }
 }
 
+func minimax(board Board, depth int, maximizing bool) int {
+  if depth == 0 {
+    return evaluateBoard(board)
+  }
+
+  moves := listAllMoves(board)
+
+  if len(moves) == 0 {
+    return evaluateBoard(board)
+  }
+
+  if maximizing {
+    bestValue := -9999
+    for _, move := range moves {
+      newBoard := board
+      movePiece(&newBoard, move[0], move[1])
+      value := minimax(newBoard, depth - 1, false)
+      if value > bestValue {
+        bestValue = value
+      }
+    }
+    return bestValue
+  } else {
+    bestValue := 9999
+    for _, move := range moves {
+      newBoard := board
+      movePiece(&newBoard, move[0], move[1])
+      value := minimax(newBoard, depth - 1, true)
+      if value < bestValue {
+        bestValue = value
+      }
+    }
+    return bestValue
+  }
+}
+
 func computeRandomMove(board *Board) {
   moves := listAllMoves(*board)
 
