@@ -189,6 +189,54 @@ func minimax(board Board, depth int, maximizing bool) int {
   }
 }
 
+func minimaxABPruning(board Board, depth int, alpha int, beta int, maximizing bool) int {
+  if depth == 0 {
+    return evaluateBoard(board)
+  }
+
+  moves := listAllMoves(board)
+
+  if len(moves) == 0 {
+    return evaluateBoard(board)
+  }
+
+  if maximizing {
+    bestValue := -9999
+    for _, move := range moves {
+      newBoard := board
+      movePiece(&newBoard, move[0], move[1])
+      value := minimaxABPruning(newBoard, depth - 1, alpha, beta, false)
+      if value > bestValue {
+        bestValue = value
+      }
+      if value > alpha {
+        alpha = value
+      }
+      if alpha >= beta {
+        break
+      }
+    }
+    return bestValue
+  } else {
+    bestValue := 9999
+    for _, move := range moves {
+      newBoard := board
+      movePiece(&newBoard, move[0], move[1])
+      value := minimaxABPruning(newBoard, depth - 1, alpha, beta, true)
+      if value < bestValue {
+        bestValue = value
+      }
+      if value < beta {
+        beta = value
+      }
+      if alpha >= beta {
+        break
+      }
+    }
+    return bestValue
+  }
+}
+
 func computeRandomMove(board *Board) {
   moves := listAllMoves(*board)
 
