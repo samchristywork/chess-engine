@@ -2,7 +2,6 @@ package main
 
 import (
   "fmt"
-  "net/http"
 )
 
 var globalBoard Board
@@ -119,20 +118,7 @@ func makeHTMLBoard(flipped bool, board Board) string {
 func main() {
   resetHandler(nil, nil)
 
-  http.HandleFunc("/board", boardHandler)
-  http.HandleFunc("/move", movePieceHandler)
-  http.HandleFunc("/valid-moves", validMoveHandler)
-  http.HandleFunc("/fen", currentFENHandler)
-  http.HandleFunc("/reset", resetHandler)
-  http.HandleFunc("/move-list", moveListHandler)
-  http.HandleFunc("/computer-move", computerMoveHandler)
-  http.HandleFunc("/piece-values", pieceValuesHandler)
+  globalBoard.blackAI = computeMinimaxABPruningMove
 
-  fs := http.FileServer(http.Dir("static"))
-  http.Handle("/", fs)
-
-  fmt.Printf("Starting server at port 8080\n")
-  if err := http.ListenAndServe(":8080", nil); err != nil {
-    fmt.Printf("Error: %s\n", err)
-  }
+  serve();
 }
