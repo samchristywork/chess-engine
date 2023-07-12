@@ -237,6 +237,90 @@ func minimaxABPruning(board Board, depth int, alpha int, beta int, maximizing bo
   }
 }
 
+func isMoveValid(board Board, from string, to string) int {
+  fromSquare := parseSquare(from)
+  toSquare := parseSquare(to)
+
+  if isOutOfBounds(fromSquare) || isOutOfBounds(toSquare) {
+    return 0
+  }
+
+  if getPiece(board, fromSquare) == Piece(' ') {
+    return 0
+  }
+
+  if !isValidMove(&board, fromSquare, toSquare) {
+    return 0
+  }
+
+  return 1
+}
+
+type Move struct {
+  from string
+  to string
+  score int
+}
+
+func computeMinimaxABPruningMove(board *Board) {
+  moves := listAllMoves(*board)
+  validMoves := make([]Move, 0)
+
+  for _, move := range moves {
+    if isMoveValid(*board, move[0], move[1]) == 1 {
+      newBoard := *board
+      movePiece(&newBoard, move[0], move[1])
+      score := minimaxABPruning(newBoard, 4, -9999, 9999, true)
+      fmt.Printf("%s -> %s: %d\n", move[0], move[1], score)
+      validMoves = append(validMoves, Move{move[0], move[1], score})
+    }
+  }
+
+  if len(validMoves) == 0 {
+    return
+  }
+
+  fmt.Println(validMoves)
+
+  move := validMoves[0]
+  for _, validMove := range validMoves {
+    if validMove.score < move.score {
+      move = validMove
+    }
+  }
+
+  movePiece(board, move.from, move.to)
+}
+
+func computeMinimaxMove(board *Board) {
+  moves := listAllMoves(*board)
+  validMoves := make([]Move, 0)
+
+  for _, move := range moves {
+    if isMoveValid(*board, move[0], move[1]) == 1 {
+      newBoard := *board
+      movePiece(&newBoard, move[0], move[1])
+      score := minimax(newBoard, 3, true)
+      validMoves = append(validMoves, Move{move[0], move[1], score})
+    }
+  }
+
+  if len(validMoves) == 0 {
+    return
+  }
+
+  fmt.Println(validMoves)
+
+  move := validMoves[0]
+  for _, validMove := range validMoves {
+    if validMove.score > move.score {
+      move = validMove
+    }
+  }
+
+  movePiece(board, move.from, move.to)
+}
+
 func computeRandomMove(board *Board) {
   moves := listAllMoves(*board)
 
