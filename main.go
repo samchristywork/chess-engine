@@ -1,6 +1,7 @@
 package main
 
 import (
+  "chess-engine/api"
   "fmt"
 )
 
@@ -116,6 +117,8 @@ func makeHTMLBoard(flipped bool, board Board) string {
 }
 
 func main() {
+  api.Foo();
+
   resetHandler(nil, nil)
 
   globalBoard.blackAI = computeMinimaxABPruningMove
