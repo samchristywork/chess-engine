@@ -1,8 +1,12 @@
 package main
 
-func isValidPawnMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
-  target := board.board[to.Rank][to.File]
+import (
+  "chess-engine/model"
+)
+
+func isValidPawnMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
+  target := board.Board[to.Rank][to.File]
 
   fileDiff := abs(from.File - to.File)
   rowDiff := abs(from.Rank - to.Rank)
@@ -17,13 +21,13 @@ func isValidPawnMove(board *Board, from Square, to Square) bool {
   }
 
   if fileDiff == 1 && rowDiff == 1 {
-    if target == Piece(' ') {
+    if target == model.Piece(' ') {
       return false
     }
   }
 
   if fileDiff == 0 && rowDiff == 1 {
-    if target != Piece(' ') {
+    if target != model.Piece(' ') {
       return false
     }
   }
@@ -32,11 +36,11 @@ func isValidPawnMove(board *Board, from Square, to Square) bool {
     return false
   }
 
-  if rowDiff == 2 && board.board[(from.Rank + to.Rank) / 2][from.File] != Piece(' ') {
+  if rowDiff == 2 && board.Board[(from.Rank + to.Rank) / 2][from.File] != model.Piece(' ') {
     return false
   }
 
-  if fileDiff == 0 && target != Piece(' ') {
+  if fileDiff == 0 && target != model.Piece(' ') {
     return false
   }
 
@@ -63,16 +67,16 @@ func isValidPawnMove(board *Board, from Square, to Square) bool {
   return true;
 }
 
-func isValidRookMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
+func isValidRookMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
 
   // Is valid destination
   if isWhite(piece) {
-    if isWhite(board.board[to.Rank][to.File]) {
+    if isWhite(board.Board[to.Rank][to.File]) {
       return false
     }
   } else {
-    if isBlack(board.board[to.Rank][to.File]) {
+    if isBlack(board.Board[to.Rank][to.File]) {
       return false
     }
   }
@@ -81,13 +85,13 @@ func isValidRookMove(board *Board, from Square, to Square) bool {
   if from.Rank == to.Rank {
     if from.File < to.File {
       for i := from.File + 1; i < to.File; i++ {
-        if board.board[from.Rank][i] != Piece(' ') {
+        if board.Board[from.Rank][i] != model.Piece(' ') {
           return false
         }
       }
     } else {
       for i := from.File - 1; i > to.File; i-- {
-        if board.board[from.Rank][i] != Piece(' ') {
+        if board.Board[from.Rank][i] != model.Piece(' ') {
           return false
         }
       }
@@ -95,13 +99,13 @@ func isValidRookMove(board *Board, from Square, to Square) bool {
   } else if from.File == to.File {
     if from.Rank < to.Rank {
       for i := from.Rank + 1; i < to.Rank; i++ {
-        if board.board[i][from.File] != Piece(' ') {
+        if board.Board[i][from.File] != model.Piece(' ') {
           return false
         }
       }
     } else {
       for i := from.Rank - 1; i > to.Rank; i-- {
-        if board.board[i][from.File] != Piece(' ') {
+        if board.Board[i][from.File] != model.Piece(' ') {
           return false
         }
       }
@@ -113,16 +117,16 @@ func isValidRookMove(board *Board, from Square, to Square) bool {
   return true
 }
 
-func isValidKnightMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
+func isValidKnightMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
 
   // Is valid destination
   if isWhite(piece) {
-    if isWhite(board.board[to.Rank][to.File]) {
+    if isWhite(board.Board[to.Rank][to.File]) {
       return false
     }
   } else {
-    if isBlack(board.board[to.Rank][to.File]) {
+    if isBlack(board.Board[to.Rank][to.File]) {
       return false
     }
   }
@@ -141,16 +145,16 @@ func isValidKnightMove(board *Board, from Square, to Square) bool {
   return false
 }
 
-func isValidBishopMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
+func isValidBishopMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
 
   // Is valid destination
   if isWhite(piece) {
-    if isWhite(board.board[to.Rank][to.File]) {
+    if isWhite(board.Board[to.Rank][to.File]) {
       return false
     }
   } else {
-    if isBlack(board.board[to.Rank][to.File]) {
+    if isBlack(board.Board[to.Rank][to.File]) {
       return false
     }
   }
@@ -166,13 +170,13 @@ func isValidBishopMove(board *Board, from Square, to Square) bool {
   if from.Rank < to.Rank {
     if from.File < to.File {
       for i := 1; i < to.Rank-from.Rank; i++ {
-        if board.board[from.Rank+i][from.File+i] != Piece(' ') {
+        if board.Board[from.Rank+i][from.File+i] != model.Piece(' ') {
           return false
         }
       }
     } else {
       for i := 1; i < to.Rank-from.Rank; i++ {
-        if board.board[from.Rank+i][from.File-i] != Piece(' ') {
+        if board.Board[from.Rank+i][from.File-i] != model.Piece(' ') {
           return false
         }
       }
@@ -180,13 +184,13 @@ func isValidBishopMove(board *Board, from Square, to Square) bool {
   } else {
     if from.File < to.File {
       for i := 1; i < from.Rank-to.Rank; i++ {
-        if board.board[from.Rank-i][from.File+i] != Piece(' ') {
+        if board.Board[from.Rank-i][from.File+i] != model.Piece(' ') {
           return false
         }
       }
     } else {
       for i := 1; i < from.Rank-to.Rank; i++ {
-        if board.board[from.Rank-i][from.File-i] != Piece(' ') {
+        if board.Board[from.Rank-i][from.File-i] != model.Piece(' ') {
           return false
         }
       }
@@ -196,20 +200,20 @@ func isValidBishopMove(board *Board, from Square, to Square) bool {
   return true
 }
 
-func isValidQueenMove(board *Board, from Square, to Square) bool {
+func isValidQueenMove(board *model.Board, from model.Square, to model.Square) bool {
   return isValidBishopMove(board, from, to) || isValidRookMove(board, from, to)
 }
 
-func isValidKingMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
+func isValidKingMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
 
   // Is valid destination
   if isWhite(piece) {
-    if isWhite(board.board[to.Rank][to.File]) {
+    if isWhite(board.Board[to.Rank][to.File]) {
       return false
     }
   } else {
-    if isBlack(board.board[to.Rank][to.File]) {
+    if isBlack(board.Board[to.Rank][to.File]) {
       return false
     }
   }
@@ -222,7 +226,7 @@ func isValidKingMove(board *Board, from Square, to Square) bool {
   return true
 }
 
-type ValidationFunc func(*Board, Square, Square) bool
+type ValidationFunc func(*model.Board, model.Square, model.Square) bool
 var pieceValidationMap = map[rune]ValidationFunc{
   'P': isValidPawnMove,
   'p': isValidPawnMove,
@@ -238,9 +242,9 @@ var pieceValidationMap = map[rune]ValidationFunc{
   'k': isValidKingMove,
 }
 
-func isValidMove(board *Board, from Square, to Square) bool {
-  piece := board.board[from.Rank][from.File]
-  if piece == Piece(' ') {
+func isValidMove(board *model.Board, from model.Square, to model.Square) bool {
+  piece := board.Board[from.Rank][from.File]
+  if piece == model.Piece(' ') {
     return false
   }
 
@@ -248,7 +252,7 @@ func isValidMove(board *Board, from Square, to Square) bool {
     return false
   }
 
-  if (isWhite(piece) && board.activeColor == "b") || (isBlack(piece) && board.activeColor == "w") {
+  if (isWhite(piece) && board.ActiveColor == "b") || (isBlack(piece) && board.ActiveColor == "w") {
     return false
   }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+  "chess-engine/model"
   "fmt"
   "net/http"
 )
@@ -18,7 +19,7 @@ func validMoveHandler(w http.ResponseWriter, r *http.Request) {
 
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      toSquare := Square{file, rank}
+      toSquare := model.Square{file, rank}
       if isValidMove(&globalBoard, parseSquare(from), toSquare) {
         fmt.Fprintf(w, "%c%c\n", 'a' + file, '8' - rank)
       }
@@ -33,11 +34,11 @@ func currentFENHandler(w http.ResponseWriter, r *http.Request) {
 func resetHandler(w http.ResponseWriter, r *http.Request) {
   fen := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
   globalBoard = FENToBoard(fen)
-  globalBoard.moveList = []string{}
+  globalBoard.MoveList = []string{}
 }
 
 func moveListHandler(w http.ResponseWriter, r *http.Request) {
-  for n, move := range globalBoard.moveList {
+  for n, move := range globalBoard.MoveList {
     fmt.Fprintf(w, "<div class='move-list-item'>%d: %s</div>", n + 1, move)
   }
 }
@@ -57,13 +58,13 @@ func movePieceHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, "Move failed\n")
   }
 
-  if (globalBoard.activeColor == "b") {
-    if (globalBoard.blackAI != nil) {
-      globalBoard.blackAI(&globalBoard)
+  if (globalBoard.ActiveColor == "b") {
+    if (globalBoard.BlackAI != nil) {
+      globalBoard.BlackAI(&globalBoard)
     }
   } else {
-    if (globalBoard.whiteAI != nil) {
-      globalBoard.whiteAI(&globalBoard)
+    if (globalBoard.WhiteAI != nil) {
+      globalBoard.WhiteAI(&globalBoard)
     }
   }
 }
@@ -89,7 +90,7 @@ func pieceValuesHandler(w http.ResponseWriter, r *http.Request) {
 
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      piece := globalBoard.board[rank][file]
+      piece := globalBoard.Board[rank][file]
       if isWhite(piece) {
         sumWhite += pieceValueMap[rune(piece)]
       }

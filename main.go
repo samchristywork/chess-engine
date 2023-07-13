@@ -1,33 +1,13 @@
 package main
 
 import (
-  "chess-engine/api"
+  "chess-engine/model"
   "fmt"
 )
 
-var globalBoard Board
+var globalBoard model.Board
 
-type Piece byte
-
-type Square struct {
-  File int
-  Rank int
-}
-
-type Board struct {
-  board [8][8]Piece
-  activeColor string
-  castling string
-  enPassant string
-  halfMoveClock int
-  fullMoveNumber int
-  lastMove [2]string
-  moveList []string
-  whiteAI func(*Board)
-  blackAI func(*Board)
-}
-
-func makeHTMLBoard(flipped bool, board Board) string {
+func makeHTMLBoard(flipped bool, board model.Board) string {
 
   if (!flipped) {
     counter := 1
@@ -42,14 +22,14 @@ func makeHTMLBoard(flipped bool, board Board) string {
       html += "<div class='row'>"
       html += fmt.Sprintf("<span class='square'>%c</span>", '8' - rank)
       for file := 0; file < 8; file++ {
-        piece := pieceToEmoji(board.board[rank][file])
+        piece := pieceToEmoji(board.Board[rank][file])
         letterFile := 'a' + file
 
         foo := ""
-        if (board.lastMove[0] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
+        if (board.LastMove[0] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
           foo += "last-move-from "
         }
-        if (board.lastMove[1] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
+        if (board.LastMove[1] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
           foo += "last-move-to "
         }
         if (counter % 2 == 0) {
@@ -84,14 +64,14 @@ func makeHTMLBoard(flipped bool, board Board) string {
       html += "<div class='row'>"
       html += fmt.Sprintf("<span class='square'>%c</span>", '8' - rank)
       for file := 7; file >= 0; file-- {
-        piece := pieceToEmoji(board.board[rank][file])
+        piece := pieceToEmoji(board.Board[rank][file])
         letterFile := 'a' + file
 
         foo := ""
-        if (board.lastMove[0] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
+        if (board.LastMove[0] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
           foo += "last-move-from "
         }
-        if (board.lastMove[1] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
+        if (board.LastMove[1] == fmt.Sprintf("%c%c", letterFile, '8' - rank)) {
           foo += "last-move-to "
         }
         if (counter % 2 == 0) {
@@ -117,11 +97,9 @@ func makeHTMLBoard(flipped bool, board Board) string {
 }
 
 func main() {
-  api.Foo();
-
   resetHandler(nil, nil)
 
-  globalBoard.blackAI = computeMinimaxABPruningMove
+  globalBoard.BlackAI = computeMinimaxABPruningMove
 
   serve();
 }

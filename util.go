@@ -1,6 +1,7 @@
 package main;
 
 import (
+  "chess-engine/model"
   "fmt"
   "strings"
 )
@@ -12,10 +13,10 @@ func abs(x int) int {
   return x
 }
 
-func printBoard(board Board) {
+func printBoard(board model.Board) {
   fmt.Println("    a b c d e f g h")
   fmt.Println("   ----------------")
-  for n, rank := range board.board {
+  for n, rank := range board.Board {
     fmt.Printf("%d |", 8-n)
     for _, piece := range rank {
       fmt.Printf(" %c", piece)
@@ -27,16 +28,16 @@ func printBoard(board Board) {
   fmt.Println(fen)
 }
 
-func printValidMoves(board Board, square string) {
+func printValidMoves(board model.Board, square string) {
   fmt.Println("    a b c d e f g h")
   fmt.Println("   ----------------")
   fromSquare := parseSquare(square)
-  for rank := range board.board {
+  for rank := range board.Board {
     fmt.Printf("%d |", 8-rank)
-    for file := range board.board[rank] {
-      toSquare := Square{file, rank}
+    for file := range board.Board[rank] {
+      toSquare := model.Square{file, rank}
 
-      if getPiece(board, toSquare) == Piece(' ') {
+      if getPiece(board, toSquare) == model.Piece(' ') {
         if isValidMove(&board, fromSquare, toSquare) {
           fmt.Print(" .")
         } else {
@@ -54,16 +55,16 @@ func printValidMoves(board Board, square string) {
   }
 }
 
-func listAllMoves(board Board) [][2]string {
+func listAllMoves(board model.Board) [][2]string {
   moves := [][2]string{}
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      fromSquare := Square{file, rank}
-      piece := board.board[rank][file]
-      if (isWhite(piece) && board.activeColor == "w") || (isBlack(piece) && board.activeColor == "b") {
+      fromSquare := model.Square{file, rank}
+      piece := board.Board[rank][file]
+      if (isWhite(piece) && board.ActiveColor == "w") || (isBlack(piece) && board.ActiveColor == "b") {
         for rank := 0; rank < 8; rank++ {
           for file := 0; file < 8; file++ {
-            toSquare := Square{file, rank}
+            toSquare := model.Square{file, rank}
             if isValidMove(&board, fromSquare, toSquare) {
               moves = append(moves, [2]string{fmt.Sprintf("%c%c", 'a' + fromSquare.File, '8' - fromSquare.Rank), fmt.Sprintf("%c%c", 'a' + toSquare.File, '8' - toSquare.Rank)})
             }
@@ -75,26 +76,26 @@ func listAllMoves(board Board) [][2]string {
   return moves
 }
 
-func pieceHasMoves(board Board, fromSquare Square) Square {
+func pieceHasMoves(board model.Board, fromSquare model.Square) model.Square {
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      toSquare := Square{file, rank}
+      toSquare := model.Square{file, rank}
       if isValidMove(&board, fromSquare, toSquare) {
         return toSquare
       }
     }
   }
 
-  return Square{-1, -1}
+  return model.Square{-1, -1}
 }
 
-func listAllPiecesWithMoves(board Board) []string {
+func listAllPiecesWithMoves(board model.Board) []string {
   pieces := []string{}
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      fromSquare := Square{file, rank}
-      piece := board.board[rank][file]
-      if (isWhite(piece) && board.activeColor == "w") || (isBlack(piece) && board.activeColor == "b") {
+      fromSquare := model.Square{file, rank}
+      piece := board.Board[rank][file]
+      if (isWhite(piece) && board.ActiveColor == "w") || (isBlack(piece) && board.ActiveColor == "b") {
         oneMove := pieceHasMoves(board, fromSquare);
         if (oneMove.File != -1) {
           pieces = append(pieces, fmt.Sprintf("%c%c", 'a' + fromSquare.File, '8' - fromSquare.Rank))
@@ -105,17 +106,17 @@ func listAllPiecesWithMoves(board Board) []string {
   return pieces
 }
 
-func parseSquare(square string) Square {
+func parseSquare(square string) model.Square {
   file := int(square[0] - 'a')
   rank := 8 - int(square[1] - '0')
-  return Square{file, rank}
+  return model.Square{file, rank}
 }
 
-func isOutOfBounds(square Square) bool {
+func isOutOfBounds(square model.Square) bool {
   return square.File < 0 || square.File > 7 || square.Rank < 0 || square.Rank > 7
 }
 
-func isSameColor(piece1 Piece, piece2 Piece) bool {
+func isSameColor(piece1 model.Piece, piece2 model.Piece) bool {
   if (isWhite(piece1) && isWhite(piece2)) {
     return true
   }
@@ -125,7 +126,7 @@ func isSameColor(piece1 Piece, piece2 Piece) bool {
   return false
 }
 
-func movePiece(board *Board, from string, to string) bool {
+func movePiece(board *model.Board, from string, to string) bool {
   fromSquare := parseSquare(from)
   toSquare := parseSquare(to)
 
@@ -133,7 +134,7 @@ func movePiece(board *Board, from string, to string) bool {
     return false
   }
 
-  if getPiece(*board, fromSquare) == Piece(' ') {
+  if getPiece(*board, fromSquare) == model.Piece(' ') {
     return false
   }
 
@@ -141,75 +142,75 @@ func movePiece(board *Board, from string, to string) bool {
     return false
   }
 
-  board.board[toSquare.Rank][toSquare.File] = board.board[fromSquare.Rank][fromSquare.File]
-  board.board[fromSquare.Rank][fromSquare.File] = Piece(' ')
+  board.Board[toSquare.Rank][toSquare.File] = board.Board[fromSquare.Rank][fromSquare.File]
+  board.Board[fromSquare.Rank][fromSquare.File] = model.Piece(' ')
 
-  board.moveList = append(board.moveList, fmt.Sprintf("%s-%s", from, to))
+  board.MoveList = append(board.MoveList, fmt.Sprintf("%s-%s", from, to))
 
-  if (board.activeColor == "w") {
-    board.activeColor = "b"
+  if (board.ActiveColor == "w") {
+    board.ActiveColor = "b"
   } else {
-    board.activeColor = "w"
+    board.ActiveColor = "w"
   }
 
-  board.lastMove[0] = from
-  board.lastMove[1] = to
+  board.LastMove[0] = from
+  board.LastMove[1] = to
 
   return true
 }
 
-func isWhite(piece Piece) bool {
+func isWhite(piece model.Piece) bool {
   return piece >= 'A' && piece <= 'Z'
 }
 
-func isBlack(piece Piece) bool {
+func isBlack(piece model.Piece) bool {
   return piece >= 'a' && piece <= 'z'
 }
 
-func getRankFile(board Board, rank int, file int) Piece {
-  return getPiece(board, Square{file, rank})
+func getRankFile(board model.Board, rank int, file int) model.Piece {
+  return getPiece(board, model.Square{file, rank})
 }
 
-func getPiece(board Board, square Square) Piece {
+func getPiece(board model.Board, square model.Square) model.Piece {
   if isOutOfBounds(square) {
-    return Piece(' ')
+    return model.Piece(' ')
   }
-  return board.board[square.Rank][square.File]
+  return board.Board[square.Rank][square.File]
 }
 
-func setPiece(board *Board, square string, piece Piece) {
+func setPiece(board *model.Board, square string, piece model.Piece) {
   square = strings.ToLower(square)
   sq := parseSquare(square)
-  board.board[sq.Rank][sq.File] = piece
+  board.Board[sq.Rank][sq.File] = piece
 }
 
-func pieceToEmoji(piece Piece) string {
+func pieceToEmoji(piece model.Piece) string {
   switch piece {
-  case Piece(' '):
+  case model.Piece(' '):
     return " "
-  case Piece('P'):
+  case model.Piece('P'):
     return "♙"
-  case Piece('N'):
+  case model.Piece('N'):
     return "♘"
-  case Piece('B'):
+  case model.Piece('B'):
     return "♗"
-  case Piece('R'):
+  case model.Piece('R'):
     return "♖"
-  case Piece('Q'):
+  case model.Piece('Q'):
     return "♕"
-  case Piece('K'):
+  case model.Piece('K'):
     return "♔"
-  case Piece('p'):
+  case model.Piece('p'):
     return "♟"
-  case Piece('n'):
+  case model.Piece('n'):
     return "♞"
-  case Piece('b'):
+  case model.Piece('b'):
     return "♝"
-  case Piece('r'):
+  case model.Piece('r'):
     return "♜"
-  case Piece('q'):
+  case model.Piece('q'):
     return "♛"
-  case Piece('k'):
+  case model.Piece('k'):
     return "♚"
   }
   return " "

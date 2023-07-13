@@ -1,8 +1,9 @@
 package main;
 
 import (
-  "math/rand"
+  "chess-engine/model"
   "fmt"
+  "math/rand"
 )
 
 var pawnTable = [8][8]int{
@@ -71,34 +72,34 @@ var kingTable = [8][8]int{
   {20, 30, 10, 0, 0, 10, 30, 20},
 }
 
-func evaluateWhite(board Board) int {
+func evaluateWhite(board model.Board) int {
   score := 0
 
-  for rank := range board.board {
-    for file := range board.board[rank] {
-      square := Square{file, rank}
+  for rank := range board.Board {
+    for file := range board.Board[rank] {
+      square := model.Square{file, rank}
       piece := getPiece(board, square)
 
-      if piece == Piece(' ') {
+      if piece == model.Piece(' ') {
         continue
       }
 
-      if piece == Piece('P') {
+      if piece == model.Piece('P') {
         score += 100
         score += pawnTable[rank][file]
-      } else if piece == Piece('N') {
+      } else if piece == model.Piece('N') {
         score += 320
         score += knightTable[rank][file]
-      } else if piece == Piece('B') {
+      } else if piece == model.Piece('B') {
         score += 330
         score += bishopTable[rank][file]
-      } else if piece == Piece('R') {
+      } else if piece == model.Piece('R') {
         score += 500
         score += rookTable[rank][file]
-      } else if piece == Piece('Q') {
+      } else if piece == model.Piece('Q') {
         score += 900
         score += queenTable[rank][file]
-      } else if piece == Piece('K') {
+      } else if piece == model.Piece('K') {
         score += 20000
         score += kingTable[rank][file]
       }
@@ -108,34 +109,34 @@ func evaluateWhite(board Board) int {
   return score
 }
 
-func evaluateBlack(board Board) int {
+func evaluateBlack(board model.Board) int {
   score := 0
 
-  for rank := range board.board {
-    for file := range board.board[rank] {
-      square := Square{file, rank}
+  for rank := range board.Board {
+    for file := range board.Board[rank] {
+      square := model.Square{file, rank}
       piece := getPiece(board, square)
 
-      if piece == Piece(' ') {
+      if piece == model.Piece(' ') {
         continue
       }
 
-      if piece == Piece('p') {
+      if piece == model.Piece('p') {
         score += 100
         score += pawnTable[rank][file]
-      } else if piece == Piece('n') {
+      } else if piece == model.Piece('n') {
         score += 320
         score += knightTable[rank][file]
-      } else if piece == Piece('b') {
+      } else if piece == model.Piece('b') {
         score += 330
         score += bishopTable[rank][file]
-      } else if piece == Piece('r') {
+      } else if piece == model.Piece('r') {
         score += 500
         score += rookTable[rank][file]
-      } else if piece == Piece('q') {
+      } else if piece == model.Piece('q') {
         score += 900
         score += queenTable[rank][file]
-      } else if piece == Piece('k') {
+      } else if piece == model.Piece('k') {
         score += 20000
         score += kingTable[rank][file]
       }
@@ -145,15 +146,15 @@ func evaluateBlack(board Board) int {
   return score
 }
 
-func evaluateBoard(board Board) int {
-  if board.activeColor == "w" {
+func evaluateBoard(board model.Board) int {
+  if board.ActiveColor == "w" {
     return evaluateWhite(board) - evaluateBlack(board)
   } else {
     return evaluateBlack(board) - evaluateWhite(board)
   }
 }
 
-func minimax(board Board, depth int, maximizing bool) int {
+func minimax(board model.Board, depth int, maximizing bool) int {
   if depth == 0 {
     return evaluateBoard(board)
   }
@@ -189,7 +190,7 @@ func minimax(board Board, depth int, maximizing bool) int {
   }
 }
 
-func minimaxABPruning(board Board, depth int, alpha int, beta int, maximizing bool) int {
+func minimaxABPruning(board model.Board, depth int, alpha int, beta int, maximizing bool) int {
   if depth == 0 {
     return evaluateBoard(board)
   }
@@ -237,7 +238,7 @@ func minimaxABPruning(board Board, depth int, alpha int, beta int, maximizing bo
   }
 }
 
-func isMoveValid(board Board, from string, to string) int {
+func isMoveValid(board model.Board, from string, to string) int {
   fromSquare := parseSquare(from)
   toSquare := parseSquare(to)
 
@@ -245,7 +246,7 @@ func isMoveValid(board Board, from string, to string) int {
     return 0
   }
 
-  if getPiece(board, fromSquare) == Piece(' ') {
+  if getPiece(board, fromSquare) == model.Piece(' ') {
     return 0
   }
 
@@ -262,7 +263,7 @@ type Move struct {
   score int
 }
 
-func computeMinimaxABPruningMove(board *Board) {
+func computeMinimaxABPruningMove(board *model.Board) {
   moves := listAllMoves(*board)
   validMoves := make([]Move, 0)
 
@@ -292,7 +293,7 @@ func computeMinimaxABPruningMove(board *Board) {
   movePiece(board, move.from, move.to)
 }
 
-func computeMinimaxMove(board *Board) {
+func computeMinimaxMove(board *model.Board) {
   moves := listAllMoves(*board)
   validMoves := make([]Move, 0)
 
@@ -321,7 +322,7 @@ func computeMinimaxMove(board *Board) {
   movePiece(board, move.from, move.to)
 }
 
-func computeRandomMove(board *Board) {
+func computeRandomMove(board *model.Board) {
   moves := listAllMoves(*board)
 
   if len(moves) == 0 {
