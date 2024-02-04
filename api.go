@@ -11,7 +11,10 @@ func boardHandler(w http.ResponseWriter, r *http.Request) {
   html += makeHTMLBoard(false, globalBoard)
   html += makeHTMLBoard(true, globalBoard)
 
-  fmt.Fprintf(w, "%s\n", html)
+  _, err := fmt.Fprintf(w, "%s\n", html)
+  if err != nil {
+    fmt.Println("Error in writing response")
+  }
 }
 
 func validMoveHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,16 +22,25 @@ func validMoveHandler(w http.ResponseWriter, r *http.Request) {
 
   for rank := 0; rank < 8; rank++ {
     for file := 0; file < 8; file++ {
-      toSquare := model.Square{file, rank}
+      toSquare := model.Square{
+        File: file,
+        Rank: rank,
+      }
       if isValidMove(&globalBoard, parseSquare(from), toSquare) {
-        fmt.Fprintf(w, "%c%c\n", 'a' + file, '8' - rank)
+        _, err := fmt.Fprintf(w, "%c%c\n", 'a'+file, '8'-rank)
+        if err != nil {
+          fmt.Println("Error in writing response")
+        }
       }
     }
   }
 }
 
 func currentFENHandler(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprintf(w, "%s\n", boardToFEN(globalBoard))
+  _, err := fmt.Fprintf(w, "%s\n", boardToFEN(globalBoard))
+  if err != nil {
+    fmt.Println("Error in writing response")
+  }
 }
 
 func resetHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +51,10 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 
 func moveListHandler(w http.ResponseWriter, r *http.Request) {
   for n, move := range globalBoard.MoveList {
-    fmt.Fprintf(w, "<div class='move-list-item'>%d: %s</div>", n + 1, move)
+    _, err := fmt.Fprintf(w, "<div class='move-list-item'>%d: %s</div>", n+1, move)
+    if err != nil {
+      fmt.Println("Error in writing response")
+    }
   }
 }
 
@@ -50,20 +65,30 @@ func computerMoveHandler(w http.ResponseWriter, r *http.Request) {
 func movePieceHandler(w http.ResponseWriter, r *http.Request) {
   from := r.URL.Query().Get("from")
   to := r.URL.Query().Get("to")
-  fmt.Fprintf(w, "Moving piece from %s to %s\n", from, to)
-  ret := movePiece(&globalBoard, from, to)
-  if ret {
-    fmt.Fprintf(w, "Move successful\n")
-  } else {
-    fmt.Fprintf(w, "Move failed\n")
+  _, err := fmt.Fprintf(w, "Moving piece from %s to %s\n", from, to)
+  if err != nil {
+    fmt.Println("Error in writing response")
   }
 
-  if (globalBoard.ActiveColor == "b") {
-    if (globalBoard.BlackAI != nil) {
+  ret := movePiece(&globalBoard, from, to)
+  if ret {
+    _, err := fmt.Fprintf(w, "Move successful\n")
+    if err != nil {
+      fmt.Println("Error in writing response")
+    }
+  } else {
+    _, err := fmt.Fprintf(w, "Move failed\n")
+    if err != nil {
+      fmt.Println("Error in writing response")
+    }
+  }
+
+  if globalBoard.ActiveColor == "b" {
+    if globalBoard.BlackAI != nil {
       globalBoard.BlackAI(&globalBoard)
     }
   } else {
-    if (globalBoard.WhiteAI != nil) {
+    if globalBoard.WhiteAI != nil {
       globalBoard.WhiteAI(&globalBoard)
     }
   }
@@ -100,8 +125,15 @@ func pieceValuesHandler(w http.ResponseWriter, r *http.Request) {
     }
   }
 
-  fmt.Fprintf(w, "White: %d\n", sumWhite)
-  fmt.Fprintf(w, "Black: %d\n", sumBlack)
+  _, err := fmt.Fprintf(w, "White: %d\n", sumWhite)
+  if err != nil {
+    fmt.Println("Error in writing response")
+  }
+
+  _, err = fmt.Fprintf(w, "Black: %d\n", sumBlack)
+  if err != nil {
+    fmt.Println("Error in writing response")
+  }
 }
 
 func serve() {
