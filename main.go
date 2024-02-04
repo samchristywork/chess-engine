@@ -39,9 +39,24 @@ func makeHTMLBoard(flipped bool, board model.Board) string {
         }
 
         if piece == " " {
-          html += fmt.Sprintf("<span class='square %s empty' onclick='pickSquare(\"%c\", %c)' id='%c%c'></span>", foo, letterFile, '8' - rank, letterFile, '8' - rank)
+          html += fmt.Sprintf(
+            "<span class='square %s empty' onclick='pickSquare(\"%c\", %c)' id='%c%c'></span>",
+            foo,
+            letterFile,
+            '8' - rank,
+            letterFile,
+            '8' - rank,
+          )
         } else {
-          html += fmt.Sprintf("<span class='square %s' onclick='pickSquare(\"%c\", %c)' id='%c%c'>%s</span>", foo, letterFile, '8' - rank, letterFile, '8' - rank, piece)
+          html += fmt.Sprintf(
+            "<span class='square %s' onclick='pickSquare(\"%c\", %c)' id='%c%c'>%s</span>",
+            foo,
+            letterFile,
+            '8' - rank,
+            letterFile,
+            '8' - rank,
+            piece,
+          )
         }
         counter++
       }
@@ -81,9 +96,24 @@ func makeHTMLBoard(flipped bool, board model.Board) string {
         }
 
         if piece == " " {
-          html += fmt.Sprintf("<span class='square %s empty' onclick='pickSquare(\"%c\", %c)' id='%c%c'></span>", foo, letterFile, '8' - rank, letterFile, '8' - rank)
+          html += fmt.Sprintf(
+            "<span class='square %s empty' onclick='pickSquare(\"%c\", %c)' id='%c%c'></span>",
+            foo,
+            letterFile,
+            '8' - rank,
+            letterFile,
+            '8' - rank,
+          )
         } else {
-          html += fmt.Sprintf("<span class='square %s' onclick='pickSquare(\"%c\", %c)' id='%c%c'>%s</span>", foo, letterFile, '8' - rank, letterFile, '8' - rank, piece)
+          html += fmt.Sprintf(
+            "<span class='square %s' onclick='pickSquare(\"%c\", %c)' id='%c%c'>%s</span>",
+            foo,
+            letterFile,
+            '8' - rank,
+            letterFile,
+            '8' - rank,
+            piece,
+          )
         }
         counter++
       }

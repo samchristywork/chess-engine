@@ -77,7 +77,7 @@ func evaluateWhite(board model.Board) int {
 
   for rank := range board.Board {
     for file := range board.Board[rank] {
-      square := model.Square{file, rank}
+      square := model.Square{File: file, Rank: rank}
       piece := getPiece(board, square)
 
       if piece == model.Piece(' ') {
@@ -114,7 +114,7 @@ func evaluateBlack(board model.Board) int {
 
   for rank := range board.Board {
     for file := range board.Board[rank] {
-      square := model.Square{file, rank}
+      square := model.Square{File: file, Rank: rank}
       piece := getPiece(board, square)
 
       if piece == model.Piece(' ') {

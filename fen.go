@@ -70,7 +70,13 @@ func boardToFEN(board model.Board) string {
     }
   }
 
-  fen += fmt.Sprintf(" %s %s %s %d %d", board.ActiveColor, board.Castling, board.EnPassant, board.HalfMoveClock, board.FullMoveNumber)
+  fen += fmt.Sprintf(" %s %s %s %d %d",
+    board.ActiveColor,
+    board.Castling,
+    board.EnPassant,
+    board.HalfMoveClock,
+    board.FullMoveNumber,
+  )
 
   return fen
 }
