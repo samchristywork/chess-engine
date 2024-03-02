@@ -2,7 +2,6 @@ package main
 
 import (
 	"chess-engine/model"
-	"fmt"
 	"math/rand"
 )
 
@@ -70,6 +69,12 @@ var kingTable = [8][8]int{
 	{-10, -20, -20, -20, -20, -20, -20, -10},
 	{20, 20, 0, 0, 0, 0, 20, 20},
 	{20, 30, 10, 0, 0, 10, 30, 20},
+}
+
+type Move struct {
+	from  string
+	to    string
+	score int
 }
 
 func evaluateWhite(board model.Board) int {
@@ -257,12 +262,6 @@ func isMoveValid(board model.Board, from string, to string) int {
 	return 1
 }
 
-type Move struct {
-	from  string
-	to    string
-	score int
-}
-
 func computeMinimaxABPruningMove(board *model.Board) {
 	moves := listAllMoves(*board)
 	validMoves := make([]Move, 0)
@@ -272,7 +271,6 @@ func computeMinimaxABPruningMove(board *model.Board) {
 			newBoard := *board
 			movePiece(&newBoard, move[0], move[1])
 			score := minimaxABPruning(newBoard, 4, -9999, 9999, true)
-			fmt.Printf("%s -> %s: %d\n", move[0], move[1], score)
 			validMoves = append(validMoves, Move{move[0], move[1], score})
 		}
 	}
@@ -280,8 +278,6 @@ func computeMinimaxABPruningMove(board *model.Board) {
 	if len(validMoves) == 0 {
 		return
 	}
-
-	fmt.Println(validMoves)
 
 	move := validMoves[0]
 	for _, validMove := range validMoves {
@@ -309,8 +305,6 @@ func computeMinimaxMove(board *model.Board) {
 	if len(validMoves) == 0 {
 		return
 	}
-
-	fmt.Println(validMoves)
 
 	move := validMoves[0]
 	for _, validMove := range validMoves {

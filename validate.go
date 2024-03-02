@@ -4,6 +4,23 @@ import (
 	"chess-engine/model"
 )
 
+type ValidationFunc func(*model.Board, model.Square, model.Square) bool
+
+var pieceValidationMap = map[rune]ValidationFunc{
+	'P': isValidPawnMove,
+	'p': isValidPawnMove,
+	'R': isValidRookMove,
+	'r': isValidRookMove,
+	'N': isValidKnightMove,
+	'n': isValidKnightMove,
+	'B': isValidBishopMove,
+	'b': isValidBishopMove,
+	'Q': isValidQueenMove,
+	'q': isValidQueenMove,
+	'K': isValidKingMove,
+	'k': isValidKingMove,
+}
+
 func isValidPawnMove(board *model.Board, from model.Square, to model.Square) bool {
 	piece := board.Board[from.Rank][from.File]
 	target := board.Board[to.Rank][to.File]
@@ -226,23 +243,6 @@ func isValidKingMove(board *model.Board, from model.Square, to model.Square) boo
 	return true
 }
 
-type ValidationFunc func(*model.Board, model.Square, model.Square) bool
-
-var pieceValidationMap = map[rune]ValidationFunc{
-	'P': isValidPawnMove,
-	'p': isValidPawnMove,
-	'R': isValidRookMove,
-	'r': isValidRookMove,
-	'N': isValidKnightMove,
-	'n': isValidKnightMove,
-	'B': isValidBishopMove,
-	'b': isValidBishopMove,
-	'Q': isValidQueenMove,
-	'q': isValidQueenMove,
-	'K': isValidKingMove,
-	'k': isValidKingMove,
-}
-
 func isValidMove(board *model.Board, from model.Square, to model.Square) bool {
 	piece := board.Board[from.Rank][from.File]
 	if piece == model.Piece(' ') {
@@ -258,6 +258,5 @@ func isValidMove(board *model.Board, from model.Square, to model.Square) bool {
 	}
 
 	pieceRune := rune(piece)
-	f := pieceValidationMap[pieceRune](board, from, to)
-	return f
+	return pieceValidationMap[pieceRune](board, from, to)
 }

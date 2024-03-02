@@ -56,14 +56,10 @@ func boardToFEN(board model.Board) string {
 				emptySquares++
 			} else {
 				if emptySquares > 0 {
-					fen += fmt.Sprintf("%d", emptySquares)
 					emptySquares = 0
 				}
 				fen += string(piece)
 			}
-		}
-		if emptySquares > 0 {
-			fen += fmt.Sprintf("%d", emptySquares)
 		}
 		if rank > 0 {
 			fen += "/"
