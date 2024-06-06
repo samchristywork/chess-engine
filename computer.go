@@ -243,23 +243,23 @@ func minimaxABPruning(board model.Board, depth int, alpha int, beta int, maximiz
 	}
 }
 
-func isMoveValid(board model.Board, from string, to string) int {
+func isMoveValid(board model.Board, from string, to string) bool {
 	fromSquare := parseSquare(from)
 	toSquare := parseSquare(to)
 
 	if isOutOfBounds(fromSquare) || isOutOfBounds(toSquare) {
-		return 0
+		return false
 	}
 
 	if getPiece(board, fromSquare) == model.Piece(' ') {
-		return 0
+		return false
 	}
 
 	if !isValidMove(&board, fromSquare, toSquare) {
-		return 0
+		return false
 	}
 
-	return 1
+	return true
 }
 
 func computeMinimaxABPruningMove(board *model.Board) {
@@ -267,7 +267,7 @@ func computeMinimaxABPruningMove(board *model.Board) {
 	validMoves := make([]Move, 0)
 
 	for _, move := range moves {
-		if isMoveValid(*board, move[0], move[1]) == 1 {
+		if isMoveValid(*board, move[0], move[1]) == true {
 			newBoard := *board
 			movePiece(&newBoard, move[0], move[1])
 			score := minimaxABPruning(newBoard, 4, -9999, 9999, true)
@@ -294,7 +294,7 @@ func computeMinimaxMove(board *model.Board) {
 	validMoves := make([]Move, 0)
 
 	for _, move := range moves {
-		if isMoveValid(*board, move[0], move[1]) == 1 {
+		if isMoveValid(*board, move[0], move[1]) == true {
 			newBoard := *board
 			movePiece(&newBoard, move[0], move[1])
 			score := minimax(newBoard, 3, true)

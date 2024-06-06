@@ -253,7 +253,8 @@ func isValidMove(board *model.Board, from model.Square, to model.Square) bool {
 		return false
 	}
 
-	if (isWhite(piece) && board.ActiveColor == "b") || (isBlack(piece) && board.ActiveColor == "w") {
+	if (isWhite(piece) && board.ActiveColor == "b") ||
+		(isBlack(piece) && board.ActiveColor == "w") {
 		return false
 	}
 

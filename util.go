@@ -79,17 +79,17 @@ func listAllMoves(board model.Board) [][2]string {
 	return moves
 }
 
-func pieceHasMoves(board model.Board, fromSquare model.Square) model.Square {
+func pieceHasMoves(board model.Board, fromSquare model.Square) bool {
 	for rank := 0; rank < 8; rank++ {
 		for file := 0; file < 8; file++ {
 			toSquare := model.Square{File: file, Rank: rank}
 			if isValidMove(&board, fromSquare, toSquare) {
-				return toSquare
+				return true
 			}
 		}
 	}
 
-	return model.Square{File: -1, Rank: -1}
+	return false
 }
 
 func listAllPiecesWithMoves(board model.Board) []string {
@@ -100,7 +100,7 @@ func listAllPiecesWithMoves(board model.Board) []string {
 			piece := board.Board[rank][file]
 			if (isWhite(piece) && board.ActiveColor == "w") || (isBlack(piece) && board.ActiveColor == "b") {
 				oneMove := pieceHasMoves(board, fromSquare)
-				if oneMove.File != -1 {
+				if oneMove {
 					pieces = append(pieces, fmt.Sprintf("%c%c", 'a'+fromSquare.File, '8'-fromSquare.Rank))
 				}
 			}
